@@ -1,0 +1,27 @@
+﻿version: "3.8"
+
+services:
+  web:
+    build: .  # Use the Dockerfile in the current directory
+    ports:
+      - "5000:80"  # Expose port 5000 on the host, forwarding it to port 80 in the container
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    networks:
+      - myapp_network
+
+  db:
+    image: postgres:alpine  # Using a pre-built PostgreSQL image
+    environment:
+      - POSTGRES_PASSWORD=example
+    volumes:
+      - pg_data:/var/lib/postgresql/data  # Persistent storage for the database
+    networks:
+      - myapp_network
+
+networks:
+  myapp_network:
+    driver: bridge  # Bridge network for internal communication between containers
+
+volumes:
+  pg_data:  # Defining a volume for the database
